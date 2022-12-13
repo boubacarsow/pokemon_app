@@ -29,3 +29,6 @@ export default class Index extends Component {
 }
 }
 
+<nav>
+    <a href="/pokemon/new">Create a New Fruit</a>
+</nav>
