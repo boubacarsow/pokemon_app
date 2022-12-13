@@ -8,7 +8,7 @@ import React, { Component } from 'react'
         <div>
           <h3> {pokemon.name} </h3>
           <img src={pokemon.img} alt={`${pokemon.name}'s Picture`}/>
-          <a href="/">Home Page</a>
+          <a href="/pokemon">Home Page</a>
           </div>
         );
        }
