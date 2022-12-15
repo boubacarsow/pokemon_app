@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "predeploy": "npm run build",
+   "deploy": "gh-pages -d build"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +23,7 @@
     "react-dom": "^16.14.0"
   },
   "devDependencies": {
+    "gh-pages": "^4.0.0",
     "nodemon": "^2.0.20"
   },
   "repository": {
@@ -30,5 +33,5 @@
   "bugs": {
     "url": "https://github.com/boubacarsow/pokemon_app/issues"
   },
-  "homepage": "https://github.com/boubacarsow/pokemon_app#readme"
+  "homepage": "https://boubacarsow.github.io/pokemon_app"
 }
