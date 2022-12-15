@@ -1,53 +1,65 @@
-const express = require('express');
-const app = express();
-const pokemon = require('./models/pokemon'); 
+require('dotenv').config();
+const  express  = require('express');
+const app =express();
+const mongoose = require('mongoose');
+const Pokemon = require('./models/pokemon.js');
 
-//Middleware
-app.set('view engine', 'jsx');
-app.engine('jsx', require('express-react-views').createEngine());
+//middleware
+app.set('view engine','jsx');
+app.engine('jsx',require('express-react-views').createEngine());
 app.use(express.urlencoded({extended:false}));
 
-app.use((req, res, next) => {
-    console.log('I run for all routes');
-    next();
+//connect to Mongoose /Remove Deprication warnings
+mongoose.set('strictQuery',true);
+mongoose.connect(process.env.MONGO_URI,{
+    useNewUrlParser:true,
+    useUnifiedTopology:true,
 });
-
-//Index
-app.get('/pokemon', (req, res) => {
-res.render('Index', {
-    pokemon
+mongoose.connection.once('open',()=>{
+    console.log('Connected to Mongo');
+});
+//Routes
+app.get('/',(req,res)=>{
+    res.send('Welcome to the Pokemon App!');
 })
-});
-
-//NEW
-app.get('/pokemon/new', (req, res) => {
-    res.render('New');
-});
-
-//Post route
-app.post('/pokemon', (req, res)=>{
-    console.log(req.body);
-    res.send('data received');
-});
-
-app.post('/pokemon', (req, res)=>{
-    if(req.body.readyToEat === 'on'){ //if checked, req.body.readyToEat is set to 'on'
-        req.body.readyToEat = true; //do some data correction
-    } else { //if not checked, req.body.readyToEat is undefined
-        req.body.readyToEat = false; //do some data correction
-    }
-    pokemon.push(req.body);
-    res.redirect('/pokemon');
-});
-
-
-//Show
-app.get('/:id', (req, res) =>{
-    res.render('Show', {
-        pokemon: pokemon[req.params.id]
+//Index Route with manual predeclared input
+// app.get('/pokemon',(req,res)=>{
+//     res.render('Index',{
+//         pokemon:pokemon
+//     });
+// })
+//Index Route with DB connection
+app.get("/pokemon",(req,res) => {
+    //find all pokemon
+   Pokemon.find({},(error,allPokemon)=>{
+    res.render('Index',{
+        pokemon:allPokemon
     })
-})
-
-app.listen(3000, () => {
-    console.log('Server running on 3000');
+   })
 });
+//New route
+app.get('/pokemon/new',(req,res)=>{
+     res.render('New');
+});
+//Post request Create Route
+app.post('/pokemon',(req,res)=>{
+    Pokemon.create(req.body,(error,createdPokemon)=>{
+    res.redirect('/pokemon');
+    })
+});
+//Show route for manual predeclared inputs
+// app.get('/pokemon/:id',(req,res) => {
+//     //res.send(pokemon[req.params.id]);
+//     res.render('Show',{pokemon:pokemon[req.params.id]})
+// })
+//Show route with DB connection
+app.get('/pokemon/:id',(req,res)=>{
+     Pokemon.findById(req.params.id,(error,foundPokemon)=>{
+       res.render('Show',{
+        pokemon:foundPokemon
+       })
+     })
+});
+app.listen(3000,()=>{
+    console.log("listening");
+})

@@ -16,9 +16,9 @@ export default class Index extends Component {
         
         <div>
             <h1 style={myStyle}>All Pokemon</h1>
-            {pokemon.map((p,id) => {
+            {pokemon.map((p) => {
                 return (
-                    <a href={`/${id}`}>
+                    <a href={`/pokemon/${p._id}`}>
                     <li>{p.name}</li>
                     </a>
                 );
